@@ -15,22 +15,17 @@ let package = Package(
             targets: ["Down"]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-cmark", .upToNextMajor(from: "0.5.0")),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", .upToNextMinor(from: "1.17.6"))
+    ],
     targets: [
         .target(
-            name: "libcmark",
-            dependencies: [],
-            path: "Sources/cmark",
-            exclude: [
-              "include",
-              "case_fold_switch.inc",
-              "entities.inc",
-              "COPYING"
-            ],
-            publicHeadersPath: "./"
-        ),
-        .target(
             name: "Down",
-            dependencies: ["libcmark"],
+            dependencies: [
+              .product(name: "cmark-gfm", package: "swift-cmark"),
+              .product(name: "cmark-gfm-extensions", package: "swift-cmark")
+            ],
             path: "Sources/Down",
             exclude: ["Down.h"],
           resources: [
@@ -40,7 +35,10 @@ let package = Package(
         ),
         .testTarget(
             name: "DownTests",
-            dependencies: ["Down"],
+            dependencies: [
+                "Down",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+            ],
             path: "Tests/DownTests",
             exclude: [
                 "AST/VisitorTests.swift",

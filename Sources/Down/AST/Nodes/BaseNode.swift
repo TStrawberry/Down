@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import libcmark
+import cmark_gfm
 
 public class BaseNode: Node {
 

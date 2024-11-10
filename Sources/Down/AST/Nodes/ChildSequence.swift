@@ -5,7 +5,7 @@
 //  Created by Sven Weidauer on 05.10.2020
 //
 
-import libcmark
+import cmark_gfm
 
 /// Sequence of child nodes.
 

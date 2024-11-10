@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import libcmark
+import cmark_gfm
+import cmark_gfm_extensions
 
 public protocol DownHTMLRenderable: DownRenderable {
 
@@ -51,7 +52,7 @@ public struct DownHTMLRenderer {
     ///     `ASTRenderingError` if the AST could not be converted.
 
     public static func astToHTML(_ ast: CMarkNode, options: DownOptions = .default) throws -> String {
-        guard let cHTMLString = cmark_render_html(ast, options.rawValue) else {
+        guard let cHTMLString = cmark_render_html(ast, options.rawValue, nil) else {
             throw DownErrors.astRenderingError
         }
 
