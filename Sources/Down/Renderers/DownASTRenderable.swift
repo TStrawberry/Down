@@ -8,6 +8,7 @@
 
 import Foundation
 import cmark_gfm
+import cmark_gfm_extensions
 
 public protocol DownASTRenderable: DownRenderable {
 
@@ -71,18 +72,27 @@ public struct DownASTRenderer {
     /// - Throws:
     ///     `MarkdownToASTError` if conversion fails.
     public static func stringToAST(_ string: String, options: DownOptions = .default) throws -> CMarkNode {
-        var tree: CMarkNode?
-
-        string.withCString {
-            let stringLength = Int(strlen($0))
-            tree = cmark_parse_document($0, stringLength, options.rawValue)
-        }
-
-        guard let ast = tree else {
-            throw DownErrors.markdownToASTError
-        }
-
-        return ast
+        return try cmark_parse_document_with_ext(string, options.rawValue)
     }
 
+    static func cmark_parse_document_with_ext(_ markdown: String, _ options: Int32) throws -> UnsafeMutablePointer<cmark_node> {
+        cmark_gfm_core_extensions_ensure_registered()
+        
+        let parser = cmark_parser_new(options)
+        defer { cmark_parser_free(parser) }
+        let extensionNames: Set<String> = ["autolink", "strikethrough", "tagfilter", "tasklist", "table"]
+        for extensionName in extensionNames {
+          guard let syntaxExtension = cmark_find_syntax_extension(extensionName) else {
+            continue
+          }
+          cmark_parser_attach_syntax_extension(parser, syntaxExtension)
+        }
+
+        // Parse the Markdown document
+        cmark_parser_feed(parser, markdown, markdown.utf8.count)
+        guard let document = cmark_parser_finish(parser) else {
+            throw DownErrors.markdownToASTError
+        }
+        return document
+    }
 }

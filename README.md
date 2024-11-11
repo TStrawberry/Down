@@ -1,3 +1,15 @@
+
+TStrawberry/Down
+=========
+
+`TStrawberry/Down` is an extended version of [johnxnguyen/Down].
+
+This repository adds some new features:
+
+- [x] Support GFM(GitHub Flavored Markdown) which is provided by <https://github.com/swiftlang/swift-cmark>, **only** SPM
+
+The rest of the README is preserved as-is from the upstream source.
+
 ## Down
 [![Build Status](https://travis-ci.com/johnxnguyen/Down.svg?branch=master)](https://travis-ci.com/johnxnguyen/Down)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/johnxnguyen/Down/blob/master/LICENSE)
